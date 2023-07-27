@@ -1,6 +1,5 @@
 import base64
 
-from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponse
 from .models import Question
@@ -29,8 +28,10 @@ def save_question(request):
             datas = Question.objects.all().order_by('-id')
             data = {
                 'msg': datas,
-                'error_message': '该问题已存在，无需录入'
+                'error_message': '该问题已存在，无需录入',
+
             }
+
             return render(request, '../templates/question/import_question.html', context=data)  # 可以已弹窗的形式
 
         else:
@@ -47,7 +48,7 @@ def save_question(request):
         datas = Question.objects.all().order_by('-id')
         data = {
             'msg': datas,
-            'error_message': ''
+            'error_message': '',
         }
         # 将数据存入到数据库中
         return render(request, '../templates/question/import_question.html', context=data)

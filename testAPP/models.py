@@ -6,7 +6,12 @@ from django.db import models
 class Question(models.Model):
     content = models.TextField(verbose_name="题目内容", primary_key=False, blank=False)
     answer = models.CharField(max_length=200, verbose_name="题目答案")
-    difficulty = models.IntegerField(verbose_name="题目难度")
+    DIFFICULTY_CHOICES = (
+        ("E", '简单'),
+        ("M", '中等'),
+        ("H", '困难'),
+    )
+    difficulty = models.CharField(verbose_name="题目难度", max_length=1, choices=DIFFICULTY_CHOICES)
     image = models.ImageField(upload_to='images/', null=True, blank=True)
     QUESTION_TYPE_CHOICES = (
         ('S', '单项选择'),
@@ -21,3 +26,6 @@ class Question(models.Model):
     # 钩子函数，将返回choices定义的数据
     def get_question_type_display(self):
         return dict(self.QUESTION_TYPE_CHOICES)[self.question_type]
+
+    def get_difficulty_display(self):
+        return dict(self.DIFFICULTY_CHOICES)[self.difficulty]

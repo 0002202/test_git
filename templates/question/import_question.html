@@ -5,7 +5,7 @@
     <title>录入题目</title>
 </head>
 <body>
-    <h2>存储题目</h2>
+    <h2>导入题目</h2>
     <h4 style="color: red">{{ error_message }}</h4>
     <form method="post" enctype="multipart/form-data" action='/save_question/'>
           {% csrf_token %}
@@ -19,13 +19,13 @@
           </div>
           <div>
             <label for="id_difficulty">问题难度：</label>
-            <input type="radio" id="easy" name="difficulty" value="1" checked="checked">
+            <input type="radio" id="easy" name="difficulty" value="E" checked="checked">
             <label for="easy">简单</label>
 
-            <input type="radio" id="medium" name="difficulty" value="2">
+            <input type="radio" id="medium" name="difficulty" value="M">
             <label for="medium">中等</label>
 
-            <input type="radio" id="hard" name="difficulty" value="3">
+            <input type="radio" id="hard" name="difficulty" value="H">
             <label for="hard">困难</label>
           </div>
           <div>
@@ -46,6 +46,7 @@
           </div>
 
     </form>
+    <hr>
     <h2>Question List</h2>
   <table>
     <thead>
@@ -60,7 +61,7 @@
         <tr>
             <td>第{{ question.id }}题：</td>
           <td><a href="{% url 'question_image' pk=question.pk %}">{{ question.content }}</a></td>
-          <td>{{ question.difficulty }}</td>
+          <td>{{ question.get_difficulty_display }}</td>
         </tr>
       {% endfor %}
     </tbody>
