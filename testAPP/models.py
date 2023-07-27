@@ -17,3 +17,7 @@ class Question(models.Model):
 
     def __str__(self):
         return self.content
+
+    # 钩子函数，将返回choices定义的数据
+    def get_question_type_display(self):
+        return dict(self.QUESTION_TYPE_CHOICES)[self.question_type]

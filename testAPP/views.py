@@ -1,3 +1,5 @@
+import base64
+
 from django.http import HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponse
@@ -11,7 +13,7 @@ def index(request):
 
 
 def show_question(request):
-    return render(request, '../templates/question/show_question.html')
+    return render(request, '../templates/question/import_question.html')
 
 
 def save_question(request):
@@ -21,14 +23,15 @@ def save_question(request):
         post_content = request.POST['content']
         post_answer = request.POST['answer']
         post_difficulty = request.POST['difficulty']
+        post_type = request.POST.get('question_type')
         # 判断获取到的题目是否已存在
         if Question.objects.filter(content=post_content, answer=post_answer).exists():
-            datas = Question.objects.all()
+            datas = Question.objects.all().order_by('-id')
             data = {
                 'msg': datas,
                 'error_message': '该问题已存在，无需录入'
             }
-            return render(request, '../templates/question/show_question.html', context=data)  # 可以已弹窗的形式
+            return render(request, '../templates/question/import_question.html', context=data)  # 可以已弹窗的形式
 
         else:
             # 创建一个新的 Question 对象，将图片文件保存到数据库中
@@ -36,7 +39,8 @@ def save_question(request):
                 content=post_content,
                 answer=post_answer,
                 difficulty=post_difficulty,
-                image=image_file
+                image=image_file,
+                question_type=post_type,
             )
             question.save()
         # 将数据存入后，进行读取数据
@@ -46,12 +50,26 @@ def save_question(request):
             'error_message': ''
         }
         # 将数据存入到数据库中
-        return render(request, '../templates/question/show_question.html', context=data)
+        return render(request, '../templates/question/import_question.html', context=data)
 
 
 def question_image(request, pk):
     question = get_object_or_404(Question, pk=pk)
+
     if question.image:
-        return HttpResponse(question.image.read(), content_type="image/jpeg")
+        image_data = question.image.read()
+        # 将图片数据转换为 Base64 编码的字符串
+        image_base64 = base64.b64encode(image_data).decode('utf-8')
+        data = {
+            'content': question.content,
+            'question_type': question.get_question_type_display(),
+            'image': image_base64
+        }
+        return render(request, '../templates/question/show_question.html', context=data)
     else:
-        return HttpResponseNotFound()
+        data = {
+            'content': question.content,
+            'question_type': question.get_question_type_display(),
+        }
+        return render(request, '../templates/question/show_question.html', context=data)
+
