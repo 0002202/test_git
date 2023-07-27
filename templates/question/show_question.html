@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>录入题目</title>
+</head>
+<body>
+    <h2>存储题目</h2>
+    <h4 style="color: red">{{ error_message }}</h4>
+    <form method="post" enctype="multipart/form-data" action='/save_question/'>
+          {% csrf_token %}
+          <div>
+            <label for="id_content">问题内容：</label>
+            <textarea name="content" id="id_content"></textarea>
+          </div>
+          <div>
+            <label for="id_answer">问题答案：</label>
+            <input type="text" name="answer" id="id_answer">
+          </div>
+          <div>
+            <label for="id_difficulty">难度级别：</label>
+            <input type="number" name="difficulty" id="id_difficulty">
+          </div>
+          <div>
+            <label for="id_image">选择图片：</label>
+            <input type="file" name="image" id="id_image" accept="image/*">
+
+          </div>
+          <div>
+            <input type="submit" value="上传">
+          </div>
+
+    </form>
+    <h2>Question List</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Difficulty</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for question in msg %}
+        <tr>
+            <td>题号：{{ question.id }}</td>
+          <td><a href="{% url 'question_image' pk=question.pk %}">{{ question.content }}</a></td>
+          <td>{{ question.difficulty }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html>

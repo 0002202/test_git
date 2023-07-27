@@ -16,9 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from testAPP.views import index
+from django.conf import settings
+from django.conf.urls.static import static
+from testAPP.views import index, show_question, save_question, question_image
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index)
-]
+    path('', index),
+
+    path('question/<int:pk>/image/', question_image, name='question_image'),
+    path('question/', show_question),
+    path('save_question/', save_question)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)       # 能够在目录中正确的找到工作目录
