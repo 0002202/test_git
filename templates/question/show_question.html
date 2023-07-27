@@ -42,7 +42,7 @@
     <tbody>
       {% for question in msg %}
         <tr>
-            <td>题号：{{ question.id }}</td>
+            <td>第{{ question.id }}题：</td>
           <td><a href="{% url 'question_image' pk=question.pk %}">{{ question.content }}</a></td>
           <td>{{ question.difficulty }}</td>
         </tr>
