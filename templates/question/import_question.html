@@ -14,10 +14,6 @@
             <textarea name="content" id="id_content"></textarea>
           </div>
           <div>
-            <label for="id_answer">问题答案：</label>
-            <input type="text" name="answer" id="id_answer">
-          </div>
-          <div>
             <label for="id_difficulty">问题难度：</label>
             <input type="radio" id="easy" name="difficulty" value="E" checked="checked">
             <label for="easy">简单</label>
@@ -36,6 +32,26 @@
                   <option value="F">填空</option>
               </select>
           </div>
+        <div>
+            <label for="option1">选项1：</label>
+              <input type="text" name="option1" id="option1" required>
+
+              <label for="option2">选项2：</label>
+              <input type="text" name="option2" id="option2" required>
+
+              <label for="option3">选项3：</label>
+              <input type="text" name="option3" id="option3" required>
+
+              <label for="option3">选项4：</label>
+              <input type="text" name="option4" id="option4" required>
+              <label for="correct_options">正确答案：</label>
+              <select name="correct_options" id="correct_options" multiple>
+                <option value="1">选项1</option>
+                <option value="2">选项2</option>
+                <option value="3">选项3</option>
+                <option value="4">选项4</option>
+              </select>
+        </div>
           <div>
             <label for="id_image">选择图片：</label>
             <input type="file" name="image" id="id_image" accept="image/*">
@@ -47,19 +63,19 @@
 
     </form>
     <hr>
-    <h2>Question List</h2>
+    <h2>题目列表</h2>
   <table>
     <thead>
       <tr>
-        <th>Number</th>
-        <th>Title</th>
-        <th>Difficulty</th>
+        <th>题号</th>
+        <th>内容</th>
+        <th>难度</th>
       </tr>
     </thead>
     <tbody>
       {% for question in msg %}
         <tr>
-            <td>第{{ question.id }}题：</td>
+          <td>第{{ question.id }}题：</td>
           <td><a href="{% url 'question_image' pk=question.pk %}">{{ question.content }}</a></td>
           <td>{{ question.get_difficulty_display }}</td>
         </tr>

@@ -5,7 +5,7 @@ from django.db import models
 
 class Question(models.Model):
     content = models.TextField(verbose_name="题目内容", primary_key=False, blank=False)
-    answer = models.CharField(max_length=200, verbose_name="题目答案")
+    # answer = models.CharField(max_length=200, verbose_name="题目答案")
     DIFFICULTY_CHOICES = (
         ("E", '简单'),
         ("M", '中等'),
@@ -29,3 +29,13 @@ class Question(models.Model):
 
     def get_difficulty_display(self):
         return dict(self.DIFFICULTY_CHOICES)[self.difficulty]
+
+
+# 存储选项内容
+class Option(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)  # 将关联题目id编号
+    content = models.TextField()
+    is_correct = models.BooleanField(default=False)  # 是否正确，默认是错误选项
+
+    def __str__(self):
+        return self.content

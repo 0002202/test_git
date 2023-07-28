@@ -26,5 +26,6 @@ urlpatterns = [
 
     path('question/<int:pk>/image/', question_image, name='question_image'),
     path('question/', show_question),
-    path('save_question/', save_question)
+    path('save_question/', save_question),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)       # 能够在目录中正确的找到工作目录

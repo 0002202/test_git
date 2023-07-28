@@ -7,6 +7,9 @@
 <body>
     <h2>{{ question_type }}</h2>
     <h4>题目：{{ content }}</h4>
+    {% for i in options %}
+        <input type="checkbox"/><span>[{{ i }}]&ensp;&ensp;&ensp;</span>
+    {% endfor %}
     {% if image %}
         <img src="data:image/jpeg;base64,{{ image }}" />
     {% endif %}
