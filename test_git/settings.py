@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-pz)wq8-ovst1s4uq)-3z&57_pwp^-d71al@bo#s=h6h4!_r-xp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = []
 
 # <<<HEAD是指主分支修改的内容，>>>>>fenzhi1 是指fenzhi1上修改的内容
 

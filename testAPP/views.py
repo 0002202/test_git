@@ -1,8 +1,11 @@
 import base64
+import random
 
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponse
+from django.http import JsonResponse
 from .models import Question, Option
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -26,7 +29,7 @@ def save_question(request):
 
         # 判断获取到的题目是否已存在，若存在则无需录入
         if Question.objects.filter(content=post_content).exists():
-            datas = Question.objects.all().order_by('-id')      # 题干数据
+            datas = Question.objects.all().order_by('-id')  # 题干数据
             data = {
                 'msg': datas,
                 'error_message': '该问题已存在，无需录入',
@@ -67,14 +70,15 @@ def save_question(request):
 
 def question_image(request, pk):
     question = get_object_or_404(Question, pk=pk)
-    option_contents  = [option[0] for option in Option.objects.filter(question=pk).values_list('content')]
-    print(option_contents)
+    option_contents = [option[0] for option in Option.objects.filter(question=pk).values_list('content')]
+    random.shuffle(option_contents)  # 将随机打乱顺序
     if question.image:
         image_data = question.image.read()
         # 将图片数据转换为 Base64 编码的字符串
         image_base64 = base64.b64encode(image_data).decode('utf-8')
 
         data = {
+            # 'pk': pk,   # 放弃了返回原始题号，因为需要重新生成题号
             'content': question.content,
             'question_type': question.get_question_type_display(),
             'image': image_base64,
@@ -89,3 +93,27 @@ def question_image(request, pk):
         }
         return render(request, '../templates/question/show_question.html', context=data)
 
+
+# 用于接收用户返回的数据进行判断，由于使用ajax进行提交数据，则将忽略掉csrf认证
+@csrf_exempt
+def is_correct(request):
+    if request.method == 'POST':
+        msg, user_correct = '', False
+        user_content = request.POST.get('content')
+        user_option = request.POST.getlist('option')
+        try:
+            # 查询数据
+            question = Question.objects.get(content=user_content)
+            correct_options = Option.objects.filter(question=question, is_correct=True)     # 查询题干对应的正确选项
+            correct_option_contents = [option.content for option in correct_options]        # 可能有多个正确选项
+            if set(user_option) == set(correct_option_contents):
+                msg = 'success'
+                user_correct = True
+                # 后面可以将该部分数据记录答题记录中
+        except:
+            msg = 'error'
+        res = {
+            'msg': msg,
+            'is_correct': user_correct,
+        }
+        return JsonResponse(res)

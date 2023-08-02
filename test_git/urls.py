@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from testAPP.views import index, show_question, save_question, question_image
+from testAPP.views import index, show_question, save_question, question_image, is_correct
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,5 +27,7 @@ urlpatterns = [
     path('question/<int:pk>/image/', question_image, name='question_image'),
     path('question/', show_question),
     path('save_question/', save_question),
+
+    path('is_correct/', is_correct),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)       # 能够在目录中正确的找到工作目录
