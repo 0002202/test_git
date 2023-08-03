@@ -1,8 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>录入题目</title>
+    <link href="{% static 'css/question/import_question.css' %}" rel="stylesheet" type="text/css">
+
 </head>
 <body>
     <h2>导入题目</h2>
@@ -11,19 +14,9 @@
           {% csrf_token %}
           <div>
             <label for="id_content">问题内容：</label>
-            <textarea name="content" id="id_content"></textarea>
+            <textarea name="content" id="id_content" placeholder="请输入题目"></textarea>
           </div>
-          <div>
-            <label for="id_difficulty">问题难度：</label>
-            <input type="radio" id="easy" name="difficulty" value="E" checked="checked">
-            <label for="easy">简单</label>
 
-            <input type="radio" id="medium" name="difficulty" value="M">
-            <label for="medium">中等</label>
-
-            <input type="radio" id="hard" name="difficulty" value="H">
-            <label for="hard">困难</label>
-          </div>
           <div>
               <label for="id_question_type">问题类型：</label>
               <select id="id_question_type" name="question_type">
@@ -34,33 +27,56 @@
           </div>
         <div>
             <label for="option1">选项1：</label>
-              <input type="text" name="option1" id="option1" required>
+              <input type="text" name="option1" id="option1" required><br>
 
               <label for="option2">选项2：</label>
-              <input type="text" name="option2" id="option2" required>
+              <input type="text" name="option2" id="option2" required><br>
 
               <label for="option3">选项3：</label>
-              <input type="text" name="option3" id="option3" required>
+              <input type="text" name="option3" id="option3" required><br>
 
               <label for="option3">选项4：</label>
-              <input type="text" name="option4" id="option4" required>
-              <label for="correct_options">正确答案：</label>
-              <select name="correct_options" id="correct_options" multiple>
-                <option value="1">选项1</option>
-                <option value="2">选项2</option>
-                <option value="3">选项3</option>
-                <option value="4">选项4</option>
-              </select>
+              <input type="text" name="option4" id="option4" required><br>
+
+            <div>
+                <label for="correct_options">正确答案：</label>
+                <select name="correct_options" id="correct_options">
+                    <option value="1">选项1</option>
+                    <option value="2">选项2</option>
+                    <option value="3">选项3</option>
+                    <option value="4">选项4</option>
+                </select>
+            </div>
         </div>
           <div>
             <label for="id_image">选择图片：</label>
             <input type="file" name="image" id="id_image" accept="image/*">
 
+          </div><br>
+        <div class="difficulty">
+            <label for="id_difficulty">问题难度：</label>
+            <input type="radio" id="easy" name="difficulty" value="E" checked="checked">
+            <label for="easy">简单</label>
+
+            <input type="radio" id="medium" name="difficulty" value="M">
+            <label for="medium">中等</label>
+
+            <input type="radio" id="hard" name="difficulty" value="H">
+            <label for="hard">困难</label>
           </div>
+
           <div>
             <input type="submit" value="上传">
           </div>
-
+        <div>
+            <label for="type_question">题目分类：</label>
+                <select name="type_question" id="type_question">
+                    <option value="网络">网络</option>
+                    <option value="架构">架构</option>
+                    <option value="计算">计算</option>
+                    <option value="其他">其他</option>
+                </select>
+        </div>
     </form>
     <hr>
     <h2>题目列表</h2>

@@ -1,10 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>base</title>
+    <link href="{% static 'css/base.css' %}">
+    <script src="{% static 'js/base.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-
+    <span>base模板</span>
+    {% block content %} {% endblock %}
 </body>
+    {% block css %} {% endblock %}
+    {% block js %} {% endblock %}
 </html>
+

@@ -5,7 +5,7 @@ from django.db import models
 
 class Question(models.Model):
     content = models.TextField(verbose_name="题目内容", primary_key=False, blank=False)
-    # answer = models.CharField(max_length=200, verbose_name="题目答案")
+    label = models.TextField(verbose_name="题目分类", primary_key=False, blank=False, default='网络')
     DIFFICULTY_CHOICES = (
         ("E", '简单'),
         ("M", '中等'),

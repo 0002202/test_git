@@ -1,6 +1,7 @@
 import base64
 import random
 
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponse
 from django.http import JsonResponse
@@ -15,7 +16,19 @@ def index(request):
 
 
 def show_question(request):
-    return render(request, '../templates/question/import_question.html')
+    if request.method == 'GET':
+        search_key = request.GET.get('search_key')
+        print(search_key)
+        if search_key:
+            # 将用户进行输入的值与数据库中存储的题目进行相比
+            questions = Question.objects.filter(Q(content__icontains=search_key)).order_by('id')
+        else:
+            questions = Question.objects.all().order_by('id')
+        data = {
+            "question_list": questions,
+        }
+        print(data)
+        return render(request, '../templates/question/show_question_list.html', context=data)
 
 
 def save_question(request):
@@ -26,6 +39,7 @@ def save_question(request):
         post_content = request.POST['content']
         post_difficulty = request.POST['difficulty']
         post_type = request.POST.get('question_type')
+        type_question = request.POST.get('type_question')     # 题目分类
 
         # 判断获取到的题目是否已存在，若存在则无需录入
         if Question.objects.filter(content=post_content).exists():
@@ -43,6 +57,7 @@ def save_question(request):
                 difficulty=post_difficulty,
                 image=image_file,
                 question_type=post_type,
+                label=type_question,
             )
             question.save()
             # 获取选项内容，存在多个选项所以需要循环存储
@@ -53,7 +68,6 @@ def save_question(request):
                 correct_options = request.POST.get('correct_options')
                 if int(correct_options) == i:
                     option = Option(question=question_foreignkey, content=post_option, is_correct=True)
-
                     option.save()
                     continue
                 option = Option(question=question_foreignkey, content=post_option)
@@ -66,6 +80,7 @@ def save_question(request):
         }
         # 将数据存入到数据库中
         return render(request, '../templates/question/import_question.html', context=data)
+    return render(request, '../templates/question/import_question.html')
 
 
 def question_image(request, pk):
@@ -76,7 +91,6 @@ def question_image(request, pk):
         image_data = question.image.read()
         # 将图片数据转换为 Base64 编码的字符串
         image_base64 = base64.b64encode(image_data).decode('utf-8')
-
         data = {
             # 'pk': pk,   # 放弃了返回原始题号，因为需要重新生成题号
             'content': question.content,
@@ -94,9 +108,9 @@ def question_image(request, pk):
         return render(request, '../templates/question/show_question.html', context=data)
 
 
-# 用于接收用户返回的数据进行判断，由于使用ajax进行提交数据，则将忽略掉csrf认证
 @csrf_exempt
 def is_correct(request):
+    # 用于接收用户返回的数据进行判断，由于使用ajax进行提交数据，则将忽略掉csrf认证
     if request.method == 'POST':
         msg, user_correct = '', False
         user_content = request.POST.get('content')
@@ -104,8 +118,8 @@ def is_correct(request):
         try:
             # 查询数据
             question = Question.objects.get(content=user_content)
-            correct_options = Option.objects.filter(question=question, is_correct=True)     # 查询题干对应的正确选项
-            correct_option_contents = [option.content for option in correct_options]        # 可能有多个正确选项
+            correct_options = Option.objects.filter(question=question, is_correct=True)  # 查询题干对应的正确选项
+            correct_option_contents = [option.content for option in correct_options]  # 可能有多个正确选项
             if set(user_option) == set(correct_option_contents):
                 msg = 'success'
                 user_correct = True
