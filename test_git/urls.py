@@ -24,9 +24,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
 
-    path('question/<int:pk>/image/', question_image, name='question_image'),
-    path('question/', show_question),
-    path('save_question/', save_question),
+    path('question/<int:pk>/info/', question_image, name='question_image'),
+    path('question/', show_question, name='show_question'),
+    path('save_question/', save_question, name='save_question'),
 
     path('is_correct/', is_correct),
 

@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link href="{% static 'css/index.css' %}" rel="stylesheet" type="text/css">
+    <script type="application/json" src="{% static 'js/index.js' %}"></script>
+
+</head>
+<body>
+    <h3>只有三个按钮</h3>
+    <div>
+        <button type="button" id="question_list" onclick="window.location.href='{% url 'show_question' %}'">题目列表</button>
+        <button type="button" id="question_edit" onclick="window.location.href='{% url 'save_question' %}'">编辑题目</button>
+        <button type="button" id="question_import" onclick="window.location.href='{% url 'save_question' %}'">导入题目</button>
+
+    </div>
+
+</body>
+</html>

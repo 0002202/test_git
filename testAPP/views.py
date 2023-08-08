@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def index(request):
-    return HttpResponse('first index web!')
+    return render(request, 'index.html')
 
 
 def show_question(request):
@@ -98,14 +98,13 @@ def question_image(request, pk):
             'image': image_base64,
             'options': option_contents
         }
-        return render(request, '../templates/question/show_question.html', context=data)
     else:
         data = {
             'content': question.content,
             'question_type': question.get_question_type_display(),
             'options': option_contents,
         }
-        return render(request, '../templates/question/show_question.html', context=data)
+    return render(request, '../templates/question/show_question.html', context=data)
 
 
 @csrf_exempt
