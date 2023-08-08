@@ -39,7 +39,7 @@ def save_question(request):
         post_content = request.POST['content']
         post_difficulty = request.POST['difficulty']
         post_type = request.POST.get('question_type')
-        type_question = request.POST.get('type_question')     # 题目分类
+        type_question = request.POST.get('type_question')  # 题目分类
 
         # 判断获取到的题目是否已存在，若存在则无需录入
         if Question.objects.filter(content=post_content).exists():
@@ -114,11 +114,14 @@ def is_correct(request):
         msg, user_correct = '', False
         user_content = request.POST.get('content')
         user_option = request.POST.getlist('option')
+
         try:
             # 查询数据
             question = Question.objects.get(content=user_content)
+            print(question)
             correct_options = Option.objects.filter(question=question, is_correct=True)  # 查询题干对应的正确选项
             correct_option_contents = [option.content for option in correct_options]  # 可能有多个正确选项
+            print(set(correct_option_contents), set(user_option))
             if set(user_option) == set(correct_option_contents):
                 msg = 'success'
                 user_correct = True
