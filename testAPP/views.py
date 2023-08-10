@@ -1,5 +1,6 @@
 import base64
 import random
+import openpyxl
 
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
@@ -81,6 +82,60 @@ def save_question(request):
         # 将数据存入到数据库中
         return render(request, '../templates/question/import_question.html', context=data)
     return render(request, '../templates/question/import_question.html')
+
+
+def import_xlsx(request):
+    def save_que(t, c, l, d):
+        # 将题目存入Question
+        if Question.objects.filter(content=c).exists():
+            return False
+        question = Question(
+            content=c,
+            difficulty=d,
+            question_type=t,
+            label=l,
+        )
+        question.save()
+        return True
+
+    def save_opt(opts, correct, content):
+        question_foreignkey = Question.objects.filter(content=content).first()
+        for i, j in enumerate(opts):
+            if i + 1 == correct:
+                option = Option(question=question_foreignkey, content=j.value, is_correct=True)
+                option.save()
+                continue
+            option = Option(question=question_foreignkey, content=j.value)
+            option.save()
+
+    if request.method == 'POST':
+        xlsx_file = request.FILES.get('xlsx')
+        # 实验openpyxl库进行读取xlsx文件
+        wb = openpyxl.load_workbook(xlsx_file)
+        sheet = wb.active  # 默认解析为sheet1
+        # 按照表格位置进行读取题目，第一行为表头不能够读取
+        question_type = [cell.value for cell in sheet['A'][1:]]
+        question_content = [cell.value for cell in sheet['B'][1:]]
+        question_label = [cell.value for cell in sheet['H'][1:]]
+        question_difficulty = [cell.value for cell in sheet['I'][1:]]
+        # 将题目存入数据库中
+        for i in range(len(question_content)):
+            res = save_que(t=question_type[i], c=question_content[i], l=question_label[i], d=question_difficulty[i])
+            if res:
+                print('题目保存成功')
+            else:
+                print('失败！！！')
+            # 选项为单行是一个题目
+            option_list = [sheet['C{}'.format(i + 2)], sheet['D{}'.format(i + 2)], sheet['E{}'.format(i + 2)],
+                           sheet['F{}'.format(i + 2)]]
+            question_correct = [cell.value for cell in sheet['G'][1:]]
+            save_opt(opts=option_list, correct=question_correct[i], content=question_content[i])
+        # for cell in sheet['C:F']:
+        #     for i in cell[1::len(question_content)]:
+        #         option_list.append(i.value)
+
+        # print(question_type, question_content, question_option)
+        return HttpResponse('test')
 
 
 def question_image(request, pk):

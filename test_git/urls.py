@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from testAPP.views import index, show_question, save_question, question_image, is_correct
+from testAPP.views import index, show_question, save_question, question_image, is_correct, import_xlsx
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +27,7 @@ urlpatterns = [
     path('question/<int:pk>/info/', question_image, name='question_image'),
     path('question/', show_question, name='show_question'),
     path('save_question/', save_question, name='save_question'),
+    path('import/', import_xlsx),
 
     path('is_correct/', is_correct),
 

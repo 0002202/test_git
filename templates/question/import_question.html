@@ -64,18 +64,31 @@
             <input type="radio" id="hard" name="difficulty" value="H">
             <label for="hard">困难</label>
           </div>
-
+            <div>
+                <label for="type_question">题目分类：</label>
+                    <select name="type_question" id="type_question">
+                        <option value="网络">网络</option>
+                        <option value="架构">架构</option>
+                        <option value="计算">计算</option>
+                        <option value="其他">其他</option>
+                    </select>
+            </div>
           <div>
             <input type="submit" value="上传">
           </div>
+
+    </form>
+    <hr>
+    <h2>使用文件进行导入题目</h2>
+    <form method="post" enctype="multipart/form-data" action='/import/'>
+        {% csrf_token %}
         <div>
-            <label for="type_question">题目分类：</label>
-                <select name="type_question" id="type_question">
-                    <option value="网络">网络</option>
-                    <option value="架构">架构</option>
-                    <option value="计算">计算</option>
-                    <option value="其他">其他</option>
-                </select>
+            <label for="id_image">选择exel文件进行导入：</label>
+            <input type="file" name="xlsx" id="id_image" accept=".xlsx,">
+        </div>
+
+        <div>
+            <input type="submit" value="上传">
         </div>
     </form>
     <hr>
