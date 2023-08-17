@@ -9,6 +9,20 @@
 </head>
 <body>
     <h2>导入题目</h2>
+    <h3>使用文件进行导入题目</h3>
+    <form method="post" enctype="multipart/form-data" action='/import/'>
+        {% csrf_token %}
+        <div>
+            <label for="id_image">选择xlsx文件进行导入：</label>
+            <input type="file" name="xlsx" id="id_image" accept=".xlsx,">
+        </div>
+        <a href="{% static '题目导入-测试.xlsx' %}" download="题目导入-测试.xlsx" target="_parent">点击下载模板文件</a>
+        <div>
+            <input type="submit" value="上传">
+        </div>
+    </form>
+    <hr>
+    <h3>导入题目</h3>
     <h4 style="color: red">{{ error_message }}</h4>
     <form method="post" enctype="multipart/form-data" action='/save_question/'>
           {% csrf_token %}
@@ -55,6 +69,7 @@
           </div><br>
         <div class="difficulty">
             <label for="id_difficulty">问题难度：</label>
+
             <input type="radio" id="easy" name="difficulty" value="E" checked="checked">
             <label for="easy">简单</label>
 
@@ -79,19 +94,7 @@
 
     </form>
     <hr>
-    <h2>使用文件进行导入题目</h2>
-    <form method="post" enctype="multipart/form-data" action='/import/'>
-        {% csrf_token %}
-        <div>
-            <label for="id_image">选择exel文件进行导入：</label>
-            <input type="file" name="xlsx" id="id_image" accept=".xlsx,">
-        </div>
 
-        <div>
-            <input type="submit" value="上传">
-        </div>
-    </form>
-    <hr>
     <h2>题目列表</h2>
   <table>
     <thead>

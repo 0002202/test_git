@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>随机答题</h2>
+    <hr>
+    <table id="question-table">
+        <thead>
+            <tr>
+{#                <th>题号</th>#}
+                <th>题目</th>
+                <th>难度</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for question in question_list %}
+            <tr>
+{#                <td>{{ question.id }}</td>#}
+                <td><a href="{% url 'question_image' pk=question.id %}">{{ question.content }}</a></td>
+                <td>{{ question.get_difficulty_display }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
+{% block css %}
+
+    <link href="{% static 'css/question/random_question.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/question/random_question.js' %}"></script>
+{% endblock %}

@@ -20,8 +20,8 @@
         <img src="data:image/jpeg;base64,{{ image }}" />
     {% endif %}
     {% for i in options %}
-        <div class="checkbox-container">
-            <input class="checkbox" type="checkbox">
+        <div class="difficulty">
+            <input class="checkbox" type="checkbox" type="radio" name="difficulty">
             <label class="checkbox-label">{{ i }}</label>
         </div>
     {% endfor %}

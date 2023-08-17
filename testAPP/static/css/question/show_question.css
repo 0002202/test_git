@@ -8,3 +8,28 @@ label{
     height: 30px;
     line-height: 30px;
 }
+.difficulty {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.difficulty label {
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.difficulty input[type="radio"] {
+  margin-right: 5px;
+  /*appearance: none;*/
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.difficulty input[type="radio"]:checked {
+  border-color: #4a90e2;
+}

@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from testAPP.views import index, show_question, save_question, question_image, is_correct, import_xlsx
+from testAPP.views import index, show_question, save_question, question_image, is_correct, import_xlsx, question_random
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +28,7 @@ urlpatterns = [
     path('question/', show_question, name='show_question'),
     path('save_question/', save_question, name='save_question'),
     path('import/', import_xlsx),
+    path('random_question/', question_random, name='question_random'),
 
     path('is_correct/', is_correct),
 

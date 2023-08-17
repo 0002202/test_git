@@ -19,7 +19,6 @@ def index(request):
 def show_question(request):
     if request.method == 'GET':
         search_key = request.GET.get('search_key')
-        print(search_key)
         if search_key:
             # 将用户进行输入的值与数据库中存储的题目进行相比
             questions = Question.objects.filter(Q(content__icontains=search_key)).order_by('id')
@@ -28,7 +27,6 @@ def show_question(request):
         data = {
             "question_list": questions,
         }
-        print(data)
         return render(request, '../templates/question/show_question_list.html', context=data)
 
 
@@ -110,6 +108,8 @@ def import_xlsx(request):
 
     if request.method == 'POST':
         xlsx_file = request.FILES.get('xlsx')
+        if xlsx_file is None:
+            return HttpResponse('未检测到文件')
         # 实验openpyxl库进行读取xlsx文件
         wb = openpyxl.load_workbook(xlsx_file)
         sheet = wb.active  # 默认解析为sheet1
@@ -122,20 +122,15 @@ def import_xlsx(request):
         for i in range(len(question_content)):
             res = save_que(t=question_type[i], c=question_content[i], l=question_label[i], d=question_difficulty[i])
             if res:
-                print('题目保存成功')
+                msg = '题目保存成功'
             else:
-                print('失败！！！')
+                msg = '题目保存失败，请检查文件是否错误.'
             # 选项为单行是一个题目
             option_list = [sheet['C{}'.format(i + 2)], sheet['D{}'.format(i + 2)], sheet['E{}'.format(i + 2)],
                            sheet['F{}'.format(i + 2)]]
             question_correct = [cell.value for cell in sheet['G'][1:]]
             save_opt(opts=option_list, correct=question_correct[i], content=question_content[i])
-        # for cell in sheet['C:F']:
-        #     for i in cell[1::len(question_content)]:
-        #         option_list.append(i.value)
-
-        # print(question_type, question_content, question_option)
-        return HttpResponse('test')
+        return HttpResponse('导入成功。')
 
 
 def question_image(request, pk):
@@ -173,10 +168,8 @@ def is_correct(request):
         try:
             # 查询数据
             question = Question.objects.get(content=user_content)
-            print(question)
             correct_options = Option.objects.filter(question=question, is_correct=True)  # 查询题干对应的正确选项
             correct_option_contents = [option.content for option in correct_options]  # 可能有多个正确选项
-            print(set(correct_option_contents), set(user_option))
             if set(user_option) == set(correct_option_contents):
                 msg = 'success'
                 user_correct = True
@@ -188,3 +181,26 @@ def is_correct(request):
             'is_correct': user_correct,
         }
         return JsonResponse(res)
+
+
+def edit_question(request):
+    pass
+
+
+def question_random(request, que_num=10):
+    question_id_list, question_list = [], []
+    # 随机出10道选择题
+    # 1.0直接随机出题，2.0可以按照权值大小进行出题
+    question_all = Question.objects.all()
+    for i in range(len(question_all)):
+        question_id = Question.objects.values('id')[i].get('id')
+        question_id_list.append(question_id)
+    question_random_list = random.sample(question_id_list, que_num)     # 拿到了十个随机题目的id
+    # 将随机获取的题目取到题目以及选项
+    for i in question_random_list:
+        question = Question.objects.filter(id=i).first()
+        question_list.append(question)
+        # 可以返回随机的答案列表
+        # options = [option[0] for option in Option.objects.filter(question=i).values_list('content')]
+        # random.shuffle(options)
+    return render(request, 'question/random_question.html', context={'question_list': question_list})
