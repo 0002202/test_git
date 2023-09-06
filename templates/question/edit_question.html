@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+    <h2>题目{{ pk }}</h2>
+    <span>题干</span><input type="text" name="content">
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/question/edit_question.js' %}"></script>
+{% endblock %}

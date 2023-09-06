@@ -183,8 +183,29 @@ def is_correct(request):
         return JsonResponse(res)
 
 
-def edit_question(request):
-    pass
+def edit_question(request, pk):
+    question = get_object_or_404(Question, pk=pk)
+    option_contents = [option[0] for option in Option.objects.filter(question=pk).values_list('content')]
+    # 进行修改，当存在图片时则将图片也展示
+    if question.image:
+        image_data = question.image.read()
+        # 将图片数据转换为 Base64 编码的字符串
+        image_base64 = base64.b64encode(image_data).decode('utf-8')
+        data = {
+            'pk': pk,
+            'content': question.content,
+            'question_type': question.get_question_type_display(),
+            'image': image_base64,
+            'options': option_contents
+        }
+    else:
+        data = {
+            'pk': pk,
+            'content': question.content,
+            'question_type': question.get_question_type_display(),
+            'options': option_contents,
+        }
+    return render(request, 'question/edit_question.html', context=data)
 
 
 def question_random(request, que_num=10):
