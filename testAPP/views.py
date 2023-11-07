@@ -124,6 +124,7 @@ def import_xlsx(request):
             if res:
                 msg = '题目保存成功'
             else:
+                # 当检查题目已存在于库中，应跳过当前题目继续完成后续保存操作
                 msg = '题目保存失败，请检查文件是否错误.'
             # 选项为单行是一个题目
             option_list = [sheet['C{}'.format(i + 2)], sheet['D{}'.format(i + 2)], sheet['E{}'.format(i + 2)],
