@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponse
 from django.http import JsonResponse
+from django.http import Http404
 from .models import Question, Option
 from django.views.decorators.csrf import csrf_exempt
 
@@ -184,29 +185,21 @@ def is_correct(request):
         return JsonResponse(res)
 
 
-def edit_question(request, pk):
-    question = get_object_or_404(Question, pk=pk)
-    option_contents = [option[0] for option in Option.objects.filter(question=pk).values_list('content')]
-    # 进行修改，当存在图片时则将图片也展示
-    if question.image:
-        image_data = question.image.read()
-        # 将图片数据转换为 Base64 编码的字符串
-        image_base64 = base64.b64encode(image_data).decode('utf-8')
-        data = {
-            'pk': pk,
-            'content': question.content,
-            'question_type': question.get_question_type_display(),
-            'image': image_base64,
-            'options': option_contents
-        }
-    else:
-        data = {
-            'pk': pk,
-            'content': question.content,
-            'question_type': question.get_question_type_display(),
-            'options': option_contents,
-        }
-    return render(request, 'question/edit_question.html', context=data)
+def edit_question(request):
+    pass
+
+@csrf_exempt
+def del_question(request):
+    # 将题目进行删除
+    pk = request.POST['questionID']
+    # 进行删除动作
+    try:
+        question = get_object_or_404(Question, pk=pk)
+        question.delete()
+        return JsonResponse({'msg': 'success'})
+    except Http404:
+        return JsonResponse({'msg': 'error'}, status=404)
+       
 
 
 def question_random(request, que_num=10):
@@ -214,6 +207,9 @@ def question_random(request, que_num=10):
     # 随机出10道选择题
     # 1.0直接随机出题，2.0可以按照权值大小进行出题
     question_all = Question.objects.all()
+    # 需要判断，若没有10道题目则返回error
+    if len(question_all) == 0:
+        return HttpResponse("<h3>暂无更多题目</h3>") 
     for i in range(len(question_all)):
         question_id = Question.objects.values('id')[i].get('id')
         question_id_list.append(question_id)
@@ -226,3 +222,4 @@ def question_random(request, que_num=10):
         # options = [option[0] for option in Option.objects.filter(question=i).values_list('content')]
         # random.shuffle(options)
     return render(request, 'question/random_question.html', context={'question_list': question_list})
+

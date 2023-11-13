@@ -1,26 +1,26 @@
-function clearTable() {
-  var table = document.getElementById("question-table");
-  var header_row = table.rows[0];
-  table.innerHTML = "";
-  table.appendChild(header_row);
+function delQuestion(button){
+    // event.preventDefault();     // 阻止事件的默认行为,防止页面自动跳转
+    // 将对象事件转换为dom对象
+    // var button = event.target;
+    // 获取父元素的题号ID
+    var QUESTIONID = button.getAttribute('delId');;
+    console.log(QUESTIONID);
+    $.ajax({
+        url: '/del_question/',
+        type: 'POST',
+        data: {
+            'questionID': QUESTIONID,
+        },
+        success:function (res){
+            if (res.msg === 'success'){
+                // 刷新页面
+                location.reload();
+                console.log('删除成功！');
+            }else {
+                throw new Error('Question not found');
+                // alert('删除失败！请联系管理员。');
+            }
+        }
+        
+    })
 }
-function search(event) {
-    event.preventDefault();             // 阻止默认的表单提交行为
-    var input = document.getElementById("search");
-    var keyword = input.value;
-      // 将数据提交到后端
-      $.ajax({
-          url: '/question/',
-          type: 'GET',
-          data: {
-              'search_key': keyword,
-          },
-      })
-}
-
-window.onload = function() {
-    var search_btn = document.getElementById('search-btn');
-    search_btn.addEventListener('click', clearTable);
-    search_btn.addEventListener('click', search);
-}
-
