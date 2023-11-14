@@ -1,23 +1,11 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>展示题目</title>
-
-    <script src="{% static 'js/question/show_question.js' %}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    {#只有这样导入css时才可以生效#}
-    <link href="{% static 'css/question/show_question.css' %}" rel="stylesheet" type="text/css">
-
-</head>
-
-<body>
+{% block content %}
     <h2 class="content_type">{{ question_type }}</h2>
     <h4>题目：<label class="content">{{ content }}</label></h4>
     {% if image %}
-        <img src="data:image/jpeg;base64,{{ image }}" />
+        <img src="data:image/jpeg;base64,{{ image }}" /> <!--对图片进行编码设置-->
     {% endif %}
     {% for i in options %}
         <div class="difficulty">
@@ -26,5 +14,12 @@
         </div>
     {% endfor %}
 
-</body>
-</html>
+{% endblock %}
+{% block css %}
+
+    <link href="{% static 'css/question/show_question.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/question/show_question.js' %}"></script>
+{% endblock %}

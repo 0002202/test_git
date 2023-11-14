@@ -20,7 +20,7 @@ function GetDocumentCheck(checkBox) {
                 var text = this.nextElementSibling.innerText;       // 若是多选题，则应返回多个选项
                 // 将数据提交到后端
                 $.ajax({
-                    url: '/is_correct/',
+                    url: '/practise_is_correct/',
                     type: 'POST',
                     data: {
                         'content': content,
