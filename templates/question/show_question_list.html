@@ -20,14 +20,22 @@
         <tbody>
         {% for question in question_list %}
             <tr>
-                <td>{{ question.id }}</td>
+                <td id="{{ question.id }}">{{ question.id }}</td>
                 <td><a href="{% url 'question_image' pk=question.pk %}">{{ question.content }}</a></td>
                 <td>{{ question.get_difficulty_display }}</td>
-                <td><button onclick="window.location.href='{% url 'edit_question' pk=question.pk %}'">修改</button><button>删除</button></td>
+                <td><button onclick="window.location.href='{% url 'edit_question' pk=question.pk %}'">修改</button><button delId="{{ question.id }}" onclick="clickDelQuestion(this)">删除</button></td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p>这是一个自定义模态框</p>
+            <button id="confirmBtn">确认</button>
+            <button id="cancelBtn">取消</button>
+        </div>
+    </div>
 {% endblock %}
 
 {% block css %}
