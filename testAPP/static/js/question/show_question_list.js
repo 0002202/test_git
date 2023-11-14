@@ -44,7 +44,7 @@ function closeModal() {
 function handleConfirmClick() {
   // 点击确认按钮后的处理逻辑
   console.log("确认按钮被点击");
-  delQuestion();
+  delQuestion(button);
   closeModal();
 }
 
