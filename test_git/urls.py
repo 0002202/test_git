@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from testAPP.views import index, show_question, save_question, question_image, is_correct, import_xlsx, question_random, edit_question, del_question
+from testAPP.views import index, show_question, save_question, question_image, practise_is_correct, import_xlsx, question_random, edit_question, del_question
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +32,6 @@ urlpatterns = [
     path('import/', import_xlsx),
     path('random_question/', question_random, name='question_random'),
 
-    path('is_correct/', is_correct),
+    path('practise_is_correct/', practise_is_correct),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)       # 能够在目录中正确的找到工作目录

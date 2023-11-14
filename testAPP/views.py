@@ -162,7 +162,8 @@ def question_image(request, pk):
 
 
 @csrf_exempt
-def is_correct(request):
+def practise_is_correct(request):
+    # 适用于练习单道题目的判错，在考试模式下并不适用
     # 用于接收用户返回的数据进行判断，由于使用ajax进行提交数据，则将忽略掉csrf认证
     if request.method == 'POST':
         msg, user_correct = '', False
@@ -219,9 +220,12 @@ def question_random(request, que_num=10):
     # 将随机获取的题目取到题目以及选项
     for i in question_random_list:
         question = Question.objects.filter(id=i).first()
+        print(question)
         question_list.append(question)
         # 可以返回随机的答案列表
         # options = [option[0] for option in Option.objects.filter(question=i).values_list('content')]
         # random.shuffle(options)
     return render(request, 'question/random_question.html', context={'question_list': question_list})
+
+
 

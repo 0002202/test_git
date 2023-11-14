@@ -2,13 +2,20 @@ const modal = document.getElementById("myModal");
 const confirmBtn = document.getElementById("confirmBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 
-function delQuestion(button){
+const elements = document.querySelectorAll('.delButton');
+
+var QUESTIONID;
+// 遍历元素，并为每个元素绑定点击事件监听器
+elements.forEach(element => {
+  element.addEventListener('click', clickDelQuestion);
+  
+});
+
+
+function delQuestion(){
     // event.preventDefault();     // 阻止事件的默认行为,防止页面自动跳转
     // 将对象事件转换为dom对象
     // var button = event.target;
-    // 获取父元素的题号ID
-    var QUESTIONID = button.getAttribute('delId');
-    console.log(QUESTIONID);
     $.ajax({
         url: '/del_question/',
         type: 'POST',
@@ -58,8 +65,11 @@ function handleCancelClick() {
 confirmBtn.addEventListener("click", handleConfirmClick);
 cancelBtn.addEventListener("click", handleCancelClick);
 
+// 绑定监听事件
 function clickDelQuestion(){
+    QUESTIONID = this.getAttribute('delId');
     // 打开模态框
     openModal();
 
 }
+console.log(QUESTIONID);
