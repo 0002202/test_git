@@ -133,7 +133,9 @@ def import_xlsx(request):
             question_correct = [cell.value for cell in sheet['G'][1:]]
             save_opt(opts=option_list, correct=question_correct[i], content=question_content[i])
         return HttpResponse('导入成功。')
-
+    # 需要进行预览题目
+    def view_question():
+        pass
 
 def question_image(request, pk):
     question = get_object_or_404(Question, pk=pk)
