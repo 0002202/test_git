@@ -23,7 +23,7 @@
                 <td id="{{ question.id }}">{{ question.id }}</td>
                 <td><a href="{% url 'question_image' pk=question.pk %}">{{ question.content }}</a></td>
                 <td>{{ question.get_difficulty_display }}</td>
-                <td><button onclick="window.location.href='{% url 'edit_question' pk=question.pk %}'">修改</button><button delId="{{ question.id }}" onclick="clickDelQuestion(this)">删除</button></td>
+                <td><button onclick="window.location.href='{% url 'edit_question' pk=question.pk %}'">修改</button><button class="delButton" delId="{{ question.id }}">删除</button></td>
             </tr>
         {% endfor %}
         </tbody>
