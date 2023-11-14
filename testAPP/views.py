@@ -1,6 +1,7 @@
 import base64
 import random
 import openpyxl
+import json
 
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
@@ -20,9 +21,21 @@ def index(request):
 def show_question(request):
     if request.method == 'GET':
         search_key = request.GET.get('search_key')
+        print(search_key)
         if search_key:
+            print("接受成功")
             # 将用户进行输入的值与数据库中存储的题目进行相比
             questions = Question.objects.filter(Q(content__icontains=search_key)).order_by('id')
+            question_list = list(questions.values())
+            if question_list:
+                json_data = json.dumps(question_list)
+            else:
+                json_data = []
+            print(json_data)
+            return JsonResponse({
+                    'code': 'success',
+                    'text': json_data[::]
+                })
         else:
             questions = Question.objects.all().order_by('id')
         data = {

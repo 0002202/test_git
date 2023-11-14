@@ -1,16 +1,54 @@
 const modal = document.getElementById("myModal");
 const confirmBtn = document.getElementById("confirmBtn");
 const cancelBtn = document.getElementById("cancelBtn");
-
 const elements = document.querySelectorAll('.delButton');
+const searchBtn = document.getElementById("search-btn");
+const searchKey = document.getElementById("search");
 
-var QUESTIONID;
+var QUESTIONCONTEXT;
+var QUESTIONID;     
+
+// 搜索函数
+function searchQuestion(){
+    event.preventDefault();  // 阻止表单的默认提交行为
+    // 获取搜索框内的内容
+    var QUESTIONCONTEXT = searchKey.value;
+    // 向后端请求查询
+    $.ajax({
+        url: '/question/',
+        type: 'GET',
+        data:{
+            'search_key': QUESTIONCONTEXT,
+        },
+        success: function(res){
+            if (res.code == 'success'){
+                // 进行展示搜索的题目
+                console.dir(res.text);
+            }else{
+                alert("搜索失败");
+            }
+        }
+    })
+}
+
 // 遍历元素，并为每个元素绑定点击事件监听器
 elements.forEach(element => {
   element.addEventListener('click', clickDelQuestion);
   
 });
 
+// 提示信息
+function showAlert(message) {
+    const alertBox = document.getElementById("alertBox");
+    alertBox.textContent = message;
+    alertBox.classList.add("show");
+  
+    setTimeout(function () {
+      alertBox.classList.remove("show");
+      window.location.reload();
+    }, 380);
+    
+  }
 
 function delQuestion(){
     // event.preventDefault();     // 阻止事件的默认行为,防止页面自动跳转
@@ -24,18 +62,15 @@ function delQuestion(){
         },
         success:function (res){
             if (res.msg === 'success'){
-                // 刷新页面
-                location.reload();
-                console.log('删除成功！');
+                // 显示提示信息
+                showAlert("删除成功！");
             }else {
                 throw new Error('Question not found');
                 // alert('删除失败！请联系管理员。');
             }
-        }
-        
+        }    
     })
 }
-
 
 // 打开模态框
 function openModal() {
@@ -51,7 +86,7 @@ function closeModal() {
 function handleConfirmClick() {
   // 点击确认按钮后的处理逻辑
   console.log("确认按钮被点击");
-  delQuestion(button);
+  delQuestion();
   closeModal();
 }
 
@@ -62,14 +97,18 @@ function handleCancelClick() {
   closeModal();
 }
 
+// 绑定监听事件
+function clickDelQuestion(){
+    QUESTIONID = this.getAttribute('delId');   
+    openModal();    // 打开模态框
+
+}
+
+// 绑定函数
 confirmBtn.addEventListener("click", handleConfirmClick);
 cancelBtn.addEventListener("click", handleCancelClick);
 
-// 绑定监听事件
-function clickDelQuestion(){
-    QUESTIONID = this.getAttribute('delId');
-    // 打开模态框
-    openModal();
+// 搜索按钮上绑定事件
+searchBtn.addEventListener("click", searchQuestion);
 
-}
-console.log(QUESTIONID);
+

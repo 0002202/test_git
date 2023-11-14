@@ -4,10 +4,10 @@
 
 {% block content %}
     <h1>题目列表</h1><hr>
-        <form>
-            <input type="text" id="search" placeholder="> 输入你想搜索的题目...">
-            <button type="submit" id="search-btn">搜索</button>
-        </form>
+    <form>
+        <input type="text" id="search" placeholder="> 输入你想搜索的题目...">
+        <button type="submit" id="search-btn">搜索</button>
+    </form>
     <table id="question-table">
         <thead>
             <tr>
@@ -31,11 +31,12 @@
 
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <p>这是一个自定义模态框</p>
-            <button id="confirmBtn">确认</button>
+            <p>确定要删除吗？</p>
+            <button id="confirmBtn" style="background-color: red;">确认</button>
             <button id="cancelBtn">取消</button>
         </div>
     </div>
+    <div id="alertBox" class="alert hidden"></div>
 {% endblock %}
 
 {% block css %}
