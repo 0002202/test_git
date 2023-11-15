@@ -2,6 +2,7 @@ import base64
 import random
 import openpyxl
 import json
+import string
 
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
@@ -21,9 +22,7 @@ def index(request):
 def show_question(request):
     if request.method == 'GET':
         search_key = request.GET.get('search_key')
-        print(search_key)
         if search_key:
-            print("接受成功")
             # 将用户进行输入的值与数据库中存储的题目进行相比
             questions = Question.objects.filter(Q(content__icontains=search_key)).order_by('id')
             question_list = list(questions.values())
@@ -31,10 +30,10 @@ def show_question(request):
                 json_data = json.dumps(question_list)
             else:
                 json_data = []
-            print(json_data)
+            # print(json_data)
             return JsonResponse({
                     'code': 'success',
-                    'text': json_data[::]
+                    'text': json_data       # 将得到的内容传到前端
                 })
         else:
             questions = Question.objects.all().order_by('id')
@@ -154,6 +153,15 @@ def question_image(request, pk):
     question = get_object_or_404(Question, pk=pk)
     option_contents = [option[0] for option in Option.objects.filter(question=pk).values_list('content')]
     random.shuffle(option_contents)  # 将随机打乱顺序
+    
+    def generate_letters(length):
+        # 用于自动生产选项编号
+        letters = list(string.ascii_uppercase)  # 从 A~Z
+        return letters[:length]
+    
+    length = len(option_contents)
+    letters = generate_letters(length)
+    options = zip(letters, option_contents)     # 包含着选项标题以及选项内容
     if question.image:
         image_data = question.image.read()
         # 将图片数据转换为 Base64 编码的字符串
@@ -163,13 +171,13 @@ def question_image(request, pk):
             'content': question.content,
             'question_type': question.get_question_type_display(),
             'image': image_base64,
-            'options': option_contents
+            'options': options,
         }
     else:
         data = {
             'content': question.content,
             'question_type': question.get_question_type_display(),
-            'options': option_contents,
+            'options': options,
         }
     return render(request, '../templates/question/show_question.html', context=data)
 
@@ -184,20 +192,24 @@ def practise_is_correct(request):
         user_option = request.POST.getlist('option')
 
         try:
+            
             # 查询数据
             question = Question.objects.get(content=user_content)
             correct_options = Option.objects.filter(question=question, is_correct=True)  # 查询题干对应的正确选项
             correct_option_contents = [option.content for option in correct_options]  # 可能有多个正确选项
             if set(user_option) == set(correct_option_contents):
+                print('逻辑错误')
                 msg = 'success'
                 user_correct = True
                 # 后面可以将该部分数据记录答题记录中
         except:
+            
             msg = 'error'
         res = {
             'msg': msg,
             'is_correct': user_correct,
         }
+        print(res)
         return JsonResponse(res)
 
 
@@ -239,6 +251,7 @@ def question_random(request, que_num=10):
         # options = [option[0] for option in Option.objects.filter(question=i).values_list('content')]
         # random.shuffle(options)
     return render(request, 'question/random_question.html', context={'question_list': question_list})
+
 
 
 

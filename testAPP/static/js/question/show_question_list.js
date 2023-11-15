@@ -22,8 +22,8 @@ function searchQuestion(){
         },
         success: function(res){
             if (res.code == 'success'){
-                // 进行展示搜索的题目
-                console.dir(res.text);
+                // 进行展示搜索的题目，将全部搜索到内容都返回到了前端
+                console.log(JSON.parse(res.text));   // JSON.parse用于将json解析为数组
             }else{
                 alert("搜索失败");
             }

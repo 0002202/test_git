@@ -7,10 +7,10 @@
     {% if image %}
         <img src="data:image/jpeg;base64,{{ image }}" /> <!--对图片进行编码设置-->
     {% endif %}
-    {% for i in options %}
+    {% for i, j in options %}
         <div class="difficulty">
             <input class="checkbox" type="checkbox" type="radio" name="difficulty">
-            <label class="checkbox-label">{{ i }}</label>
+            <label class="checkbox-label">{{ i }}.{{ j }}</label>
         </div>
     {% endfor %}
 
